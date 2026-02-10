@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Muhammadissan Tohwae - Portfolio</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    animation: {
+                        'gradient-x': 'gradient-x 15s ease infinite',
+                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+                        'fade-in-down': 'fadeInDown 0.8s ease-out forwards',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        'gradient-x': {
+                            '0%, 100%': {
+                                'background-size': '200% 200%',
+                                'background-position': 'left center'
+                            },
+                            '50%': {
+                                'background-size': '200% 200%',
+                                'background-position': 'right center'
+                            },
+                        },
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        fadeInDown: {
+                            '0%': { opacity: '0', transform: 'translateY(-20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        /* Custom Styles that Tailwind doesn't cover easily */
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+        
+        /* Hide default cursor only on desktop to use custom cursor */
+        @media (min-width: 768px) {
+            body {
+                cursor: none;
+            }
+            a, button, .cursor-pointer {
+                cursor: none;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 5px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .dark .glass-panel {
+            background: rgba(17, 24, 39, 0.4);
+            border: 1px solid rgba(55, 65, 81, 0.5);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 dark:bg-[#0a0a0a] dark:text-gray-100 transition-colors duration-700 selection:bg-cyan-500 selection:text-white">
+
+    <!-- Particle Background -->
+    <canvas id="particle-canvas" class="fixed top-0 left-0 w-full h-full pointer-events-none z-0"></canvas>
+
+    <!-- Parallax Shapes -->
+    <div class="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0 opacity-40">
+        <div id="blob1" class="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] rounded-full blur-[100px] transition-colors duration-700 bg-gray-300/40 dark:bg-blue-900/40"></div>
+        <div id="blob2" class="absolute top-[40%] right-[-5%] w-[400px] h-[400px] rounded-full blur-[100px] transition-colors duration-700 bg-gray-200/40 dark:bg-purple-900/30"></div>
+        <div id="blob3" class="absolute bottom-[-10%] left-[20%] w-[600px] h-[600px] rounded-full blur-[120px] transition-colors duration-700 bg-gray-300/30 dark:bg-cyan-900/30"></div>
+    </div>
+
+    <!-- Custom Cursor -->
+    <div id="custom-cursor" class="fixed pointer-events-none z-[100] transition-transform duration-100 ease-out hidden md:block" style="left: -100px; top: -100px;">
+        <div id="cursor-inner" class="relative flex items-center justify-center transition-transform duration-300 scale-100">
+            <div class="absolute inset-0 rounded-full blur-md transition-opacity duration-300 bg-blue-500/30 dark:bg-cyan-500/30 opacity-50"></div>
+            <i data-lucide="brain-circuit" class="w-8 h-8 text-blue-600 dark:text-cyan-400 filter drop-shadow-md transition-colors duration-300 stroke-[1.5]"></i>
+            <div id="cursor-ring" class="absolute -inset-2 border rounded-full transition-all duration-300 scale-50 opacity-0 border-blue-600 dark:border-cyan-400"></div>
+        </div>
+    </div>
+
+    <!-- Welcome Screen -->
+    <div id="welcome-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#0a0a0a] transition-all duration-700">
+        <div class="relative z-10 flex flex-col items-center text-center space-y-8 p-6 max-w-2xl">
+            <!-- Profile Image -->
+            <div class="relative group">
+                <div class="absolute -inset-4 rounded-full blur-2xl opacity-40 animate-pulse bg-blue-500 dark:bg-cyan-500"></div>
+                <div class="relative w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border-4 shadow-2xl transition-transform duration-500 hover:scale-105 border-blue-500 dark:border-cyan-400 shadow-blue-500/30 dark:shadow-cyan-500/50">
+                    <img src="https://i.postimg.cc/TwDkg7Py/profile.png" alt="Muhammadissan" class="w-full h-full object-cover">
+                </div>
+            </div>
+            
+            <!-- Text -->
+            <div class="space-y-4 animate-fade-in-up">
+                <h1 class="text-4xl md:text-6xl font-bold tracking-tight text-gray-900 dark:text-white">Muhammadissan Tohwae</h1>
+                <div class="h-1 w-24 mx-auto rounded-full bg-gradient-to-r from-gray-900 to-gray-600 dark:from-cyan-400 dark:to-blue-600"></div>
+                <p class="text-xl md:text-2xl font-medium text-blue-600 dark:text-cyan-400">Information Technology and Digital Innovation</p>
+                <p class="text-sm md:text-base tracking-wide text-gray-500 dark:text-gray-400">Songkhla Rajabhat University</p>
+            </div>
+
+            <!-- Button -->
+            <button onclick="enterSite()" class="group relative px-10 py-4 mt-8 rounded-full font-bold text-lg tracking-widest uppercase transition-all duration-300 hover:scale-105 hover:px-12 hover:shadow-[0_0_40px_rgba(34,211,238,0.4)] bg-black text-white dark:bg-white dark:text-black cursor-pointer">
+                <span class="flex items-center gap-2">
+                    Enter Portfolio <i data-lucide="arrow-right" class="w-5 h-5 transition-transform group-hover:translate-x-1"></i>
+                </span>
+                <span class="absolute inset-0 rounded-full border-2 border-white/50 animate-ping opacity-20"></span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content (Hidden initially) -->
+    <div id="main-content" class="opacity-0 transition-opacity duration-1000 hidden">
+        
+        <!-- Navbar -->
+        <nav class="fixed top-0 w-full backdrop-blur-lg border-b z-40 transition-all duration-500 animate-fade-in-down bg-white/70 border-gray-200 dark:bg-[#0a0a0a]/70 dark:border-gray-800">
+            <div class="max-w-6xl mx-auto px-6 h-16 flex justify-between items-center">
+                <div class="font-bold text-xl tracking-tighter flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full overflow-hidden border-2 transition-all duration-300 shadow-lg border-gray-200 shadow-gray-200 dark:border-cyan-500 dark:shadow-cyan-500/20">
+                        <img src="https://i.postimg.cc/TwDkg7Py/profile.png" alt="Profile" class="w-full h-full object-cover">
+                    </div>
+                    <span class="text-black dark:text-white">Muhammadissan Tohwae</span>
+                </div>
+                <div class="hidden md:flex gap-8 text-sm font-medium transition-colors text-gray-600 dark:text-gray-400">
+                    <a href="#home" class="hover:text-black dark:hover:text-cyan-400 hover:scale-105 transition-all">Home</a>
+                    <a href="#about" class="hover:text-black dark:hover:text-cyan-400 hover:scale-105 transition-all">About</a>
+                    <a href="#skills" class="hover:text-black dark:hover:text-cyan-400 hover:scale-105 transition-all">Skills</a>
+                    <a href="#projects" class="hover:text-black dark:hover:text-cyan-400 hover:scale-105 transition-all">Projects</a>
+                    <a href="#contact" class="hover:text-black dark:hover:text-cyan-400 hover:scale-105 transition-all">Contact</a>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button onclick="toggleTheme()" class="p-2 rounded-full transition-all duration-300 transform hover:rotate-12 bg-white text-gray-600 border border-gray-200 hover:bg-gray-100 shadow-sm dark:bg-gray-800 dark:text-yellow-400 dark:border-gray-700 dark:hover:bg-gray-700 dark:hover:shadow-[0_0_15px_rgba(255,255,0,0.3)]" aria-label="Toggle Theme">
+                        <i id="theme-icon" data-lucide="sun" class="w-5 h-5"></i>
+                    </button>
+                    <button onclick="window.location.href='mailto:muhammadissan42@gmail.com'" class="px-5 py-2 rounded-full text-sm font-bold transition-all duration-300 transform hover:scale-105 shadow-lg bg-black text-white hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-cyan-50 dark:hover:shadow-[0_0_20px_rgba(255,255,255,0.4)]">
+                        Hire Me
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <section id="home" class="pt-40 pb-20 px-6 md:px-12 max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-12 relative z-10">
+            <div class="flex-1 space-y-8 reveal-on-scroll">
+                <h1 class="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-none mb-6">
+                    Future <br/>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-gray-900 via-gray-700 to-gray-500 dark:from-cyan-400 dark:via-blue-500 dark:to-purple-600 dark:animate-gradient-x">
+                        Network / Software Developer
+                    </span>
+                </h1>
+                <p class="text-lg md:text-xl max-w-lg leading-relaxed text-gray-600 dark:text-gray-400">
+                    นักศึกษาเทคโนโลยีสารสนเทศที่หลงใหลในการสร้างสรรค์นวัตกรรมดิจิทัล 
+                    <span class="text-black dark:text-cyan-400"> IoT</span> & 
+                    <span class="text-black dark:text-purple-400"> AI </span>
+                    จากมหาวิทยาลัยราชภัฏสงขลา
+                </p>
+                <div class="flex flex-wrap gap-4 pt-8">
+                    <a href="#projects" class="px-8 py-4 rounded-full font-bold hover:scale-105 transition-all duration-300 shadow-xl bg-black text-white shadow-gray-400/50 dark:bg-gradient-to-r dark:from-cyan-500 dark:to-blue-600 dark:text-white dark:shadow-cyan-500/30">
+                        View Projects
+                    </a>
+                    <a href="#contact" class="px-8 py-4 border rounded-full font-bold transition-all duration-300 backdrop-blur-sm border-gray-300 text-gray-900 hover:bg-white/50 dark:border-gray-600 dark:text-white dark:hover:bg-white/10">
+                        Contact Me
+                    </a>
+                </div>
+            </div>
+            
+            <div class="w-full md:w-1/3 reveal-on-scroll">
+                <div class="relative group">
+                    <div class="absolute -inset-1 rounded-[2.5rem] blur opacity-30 group-hover:opacity-75 transition duration-1000 group-hover:duration-200 bg-gradient-to-r from-gray-400 to-gray-200 dark:from-cyan-400 dark:via-blue-500 dark:to-purple-600"></div>
+                    <div class="relative aspect-[3/4] rounded-[2rem] overflow-hidden shadow-2xl border transition-all duration-500 bg-white border-white dark:bg-gray-900 dark:border-gray-700/50">
+                        <img src="https://i.postimg.cc/TwDkg7Py/profile.png" onerror="this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=774&q=80'" alt="Muhammadissan Profile" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-gradient-to-t opacity-40 from-white/20 via-transparent to-transparent dark:from-black/80 dark:via-transparent dark:to-transparent"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="py-24 px-6 md:px-12 max-w-6xl mx-auto relative z-10 reveal-on-scroll">
+            <h2 class="text-4xl md:text-5xl font-bold mb-16 flex items-center gap-4 text-gray-900 dark:text-white">
+                <span class="w-2 h-12 rounded-full shadow-[0_0_15px_rgba(0,0,0,0.2)] bg-black dark:bg-cyan-400 dark:shadow-cyan-400/50"></span>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r dark:from-white dark:to-gray-400">About Me</span>
+            </h2>
+            <div class="grid md:grid-cols-2 gap-12">
+                <div class="p-8 rounded-3xl border backdrop-blur-md transition-all duration-300 bg-white/60 border-gray-100 shadow-lg dark:bg-gray-900/40 dark:border-gray-800 glass-panel">
+                    <h3 class="text-2xl font-bold mb-6 flex items-center gap-3 text-gray-900 dark:text-white">
+                        <i data-lucide="user" class="w-6 h-6 text-black dark:text-cyan-400"></i>
+                        Personal Information
+                    </h3>
+                    <p class="mb-8 leading-relaxed text-lg text-gray-600 dark:text-gray-300">
+                        สวัสดีชาวโลก ผม ซัน เป็นนักศึกษามหาวิทยาลัยราชภัฏสงขลา ชั้นปีที่ 3 มีความหลงใหลในด้านเทคโนโลยี การสร้างสรรค์คอนเทนต์ ผมสนุกกับการแก้ไขปัญหา เรียนรู้ในสิ่งใหม่ๆ ไม่ว่าจะเป็น Mobile App, Web Development, Software Developer, Network, Database หรือ IoT ผมพร้อมที่จะนำทักษะที่มีไปประยุกต์ใช้ในการทำงานจริง
+                    </p>
+                    <div class="space-y-6">
+                        <div class="flex items-center gap-4 group">
+                            <div class="w-12 h-12 rounded-2xl flex items-center justify-center transition-colors bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-cyan-400 dark:group-hover:bg-cyan-500 dark:group-hover:text-white">
+                                <i data-lucide="zap" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500 dark:text-gray-500">Age</p>
+                                <p class="font-bold text-lg text-gray-900 dark:text-white">20 Years Old</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4 group">
+                            <div class="w-12 h-12 rounded-2xl flex items-center justify-center transition-colors bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-purple-400 dark:group-hover:bg-purple-500 dark:group-hover:text-white">
+                                <i data-lucide="map-pin" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500 dark:text-gray-500">Location</p>
+                                <p class="font-bold text-lg text-gray-900 dark:text-white">Mueang District, Yala, Thailand</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-8 rounded-3xl border backdrop-blur-md relative overflow-hidden transition-all duration-300 group hover:-translate-y-2 bg-white/60 border-gray-100 shadow-lg dark:bg-gray-900/40 dark:border-gray-800 dark:hover:border-cyan-500/30 glass-panel">
+                    <div class="absolute top-0 right-0 p-8 opacity-10 transition-transform duration-700 group-hover:scale-110 group-hover:rotate-12 text-black dark:text-white">
+                        <i data-lucide="graduation-cap" class="w-32 h-32"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-8 flex items-center gap-3 text-gray-900 dark:text-white">
+                        <i data-lucide="graduation-cap" class="w-6 h-6 text-red-500"></i>
+                        Education
+                    </h3>
+                    <div class="relative border-l-2 pl-8 py-2 ml-2 border-gray-200 dark:border-gray-700">
+                        
+                        <!-- University -->
+                        <div class="mb-12 relative">
+                            <div class="absolute w-5 h-5 rounded-full -left-[43px] top-2 border-4 shadow-[0_0_10px_rgba(255,0,0,0.5)] bg-red-500 border-white dark:border-gray-900"></div>
+                            <span class="inline-block px-4 py-1.5 bg-red-500/10 text-red-500 text-xs font-bold tracking-wider uppercase rounded-full mb-4">
+                                2023 - Present
+                            </span>
+                            <h4 class="text-2xl font-bold mb-2 text-gray-900 dark:text-white">Songkhla Rajabhat University</h4>
+                            <p class="font-medium mb-1 text-lg text-gray-700 dark:text-gray-300">Faculty of Science and Technology</p>
+                            <p class="text-sm mb-6 text-gray-500">Information Technology and Digital Innovation</p>
+                            
+                            <div class="flex items-center gap-3 p-4 rounded-xl border inline-flex backdrop-blur-sm bg-white/80 border-gray-200 dark:bg-gray-800/50 dark:border-gray-700">
+                                <i data-lucide="award" class="w-6 h-6 text-yellow-400"></i>
+                                <span class="font-bold text-lg text-gray-800 dark:text-white">GPA: 3.61</span>
+                            </div>
+                        </div>
+
+                        <!-- High School -->
+                        <div class="relative">
+                            <div class="absolute w-5 h-5 rounded-full -left-[43px] top-2 border-4 shadow-[0_0_10px_rgba(255,0,0,0.5)] bg-gray-500 border-white dark:border-gray-900"></div>
+                            <span class="inline-block px-4 py-1.5 text-xs font-bold tracking-wider uppercase rounded-full mb-4 bg-gray-200 text-gray-600 dark:bg-gray-800 dark:text-gray-400">
+                                2020
+                            </span>
+                            <h4 class="text-xl font-bold mb-2 text-gray-900 dark:text-white">Muslimsuksa School Yala</h4>
+                            <p class="font-medium mb-6 text-lg text-gray-700 dark:text-gray-300">High School Diploma</p>
+                            
+                            <div class="flex items-center gap-3 p-4 rounded-xl border inline-flex backdrop-blur-sm bg-white/80 border-gray-200 dark:bg-gray-800/50 dark:border-gray-700">
+                                <i data-lucide="award" class="w-6 h-6 text-yellow-400"></i>
+                                <span class="font-bold text-lg text-gray-800 dark:text-white">GPA: 3.65</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills" class="py-24 px-6 md:px-12 max-w-6xl mx-auto relative z-10 reveal-on-scroll">
+            <h2 class="text-4xl md:text-5xl font-bold mb-16 flex items-center gap-4 text-gray-900 dark:text-white">
+                <span class="w-2 h-12 rounded-full shadow-[0_0_15px_rgba(0,0,0,0.2)] bg-black dark:bg-cyan-400 dark:shadow-cyan-400/50"></span>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r dark:from-white dark:to-gray-400">Technical Skills</span>
+            </h2>
+            
+            <div id="skills-grid" class="grid grid-cols-2 md:grid-cols-5 gap-6">
+                <!-- Skills will be injected by JS -->
+            </div>
+            
+            <div class="mt-12">
+                <h3 class="text-2xl font-bold mb-8 text-center text-gray-900 dark:text-white">
+                    Soft Skills & Attributes
+                </h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+                    <!-- Soft Skills injected by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="py-24 px-6 md:px-12 max-w-6xl mx-auto relative z-10 reveal-on-scroll">
+            <h2 class="text-4xl md:text-5xl font-bold mb-16 flex items-center gap-4 text-gray-900 dark:text-white">
+                <span class="w-2 h-12 rounded-full shadow-[0_0_15px_rgba(0,0,0,0.2)] bg-black dark:bg-cyan-400 dark:shadow-cyan-400/50"></span>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r dark:from-white dark:to-gray-400">Featured Projects</span>
+            </h2>
+            <div id="projects-grid" class="grid md:grid-cols-2 gap-8">
+                <!-- Projects will be injected by JS -->
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-32 px-6 relative overflow-hidden bg-black dark:bg-[#050505] text-white border-t dark:border-gray-900">
+            <div class="absolute inset-0 opacity-20 pointer-events-none bg-[linear-gradient(rgba(0,255,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(0,255,255,0.1)_1px,transparent_1px)] bg-[size:40px_40px]"></div>
+            
+            <div class="max-w-4xl mx-auto text-center relative z-10 reveal-on-scroll">
+                <h2 class="text-5xl md:text-7xl font-bold tracking-tight mb-10 leading-tight">
+                    Ready to <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">Collaborate?</span>
+                </h2>
+                
+                <p class="text-gray-400 max-w-2xl mx-auto text-xl leading-relaxed mb-20">
+                    ผมพร้อมที่จะเรียนรู้และเติบโตไปพร้อมกับองค์กรของคุณ <br class="hidden md:block" /> 
+                    หากคุณกำลังมองหาคนรุ่นใหม่ที่มีความมุ่งมั่น ติดต่อผมได้เลยครับ
+                </p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-6xl mx-auto px-4">
+                    
+                    <!-- Email Card -->
+                    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=muhammadissan42@gmail.com" target="_blank" rel="noopener noreferrer" class="group flex flex-col items-center justify-center gap-4 p-8 rounded-2xl border backdrop-blur-sm transition-all duration-300 hover:scale-105 bg-white hover:border-gray-300 shadow-lg dark:bg-gray-900/60 dark:border-gray-700 dark:hover:border-cyan-500 dark:hover:shadow-[0_0_20px_rgba(34,211,238,0.2)]">
+                        <div class="p-4 rounded-full transition-colors bg-gray-200 text-black dark:bg-gray-800 dark:text-cyan-400 dark:group-hover:bg-cyan-500 dark:group-hover:text-white">
+                            <i data-lucide="mail" class="w-8 h-8"></i>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-xs text-gray-400 uppercase tracking-wider font-semibold mb-1">Email Me</p>
+                            <p class="font-bold text-sm md:text-base break-all text-gray-900 dark:text-white">muhammadissan42@gmail.com</p>
+                        </div>
+                    </a>
+
+                    <!-- Phone Card -->
+                    <a href="tel:+66646375396" class="group flex flex-col items-center justify-center gap-4 p-8 rounded-2xl border backdrop-blur-sm transition-all duration-300 hover:scale-105 bg-white hover:border-gray-300 shadow-lg dark:bg-gray-900/60 dark:border-gray-700 dark:hover:border-green-500 dark:hover:shadow-[0_0_20px_rgba(34,197,94,0.2)]">
+                        <div class="p-4 rounded-full transition-colors bg-gray-200 text-black dark:bg-gray-800 dark:text-green-400 dark:group-hover:bg-green-500 dark:group-hover:text-white">
+                            <i data-lucide="phone" class="w-8 h-8"></i>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-xs text-gray-400 uppercase tracking-wider font-semibold mb-1">Call Me</p>
+                            <p class="font-bold text-lg text-gray-900 dark:text-white">+66 64 637 5396</p>
+                        </div>
+                    </a>
+
+                    <!-- Line QR Card -->
+                    <button onclick="openQrModal()" class="group flex flex-col items-center justify-center gap-4 p-6 rounded-2xl border backdrop-blur-sm transition-all duration-300 hover:scale-105 cursor-pointer bg-white hover:border-gray-300 shadow-lg dark:bg-gray-900/60 dark:border-gray-700 dark:hover:border-purple-500 dark:hover:shadow-[0_0_20px_rgba(168,85,247,0.2)]">
+                        <div class="text-center mb-1">
+                            <p class="text-xs text-gray-400 uppercase tracking-wider font-semibold flex items-center justify-center gap-2">
+                                <i data-lucide="qr-code" class="w-4 h-4"></i> Add Line
+                            </p>
+                        </div>
+                        <div class="relative p-1 bg-white rounded-xl overflow-hidden">
+                            <img src="https://i.postimg.cc/NFypBdWn/Add-line.jpg" alt="Line QR" class="w-24 h-24 object-cover">
+                            <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                <p class="text-white text-xs font-bold bg-black/50 px-2 py-1 rounded-full backdrop-blur-md">Click to Expand</p>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-500">Scan to Chat</p>
+                    </button>
+
+                </div>
+
+                <div class="pt-24 text-gray-600 text-sm mt-12 flex justify-center items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                    <p>โปรดติดต่อกลับทางช่องทางติดต่อด้านบน @ 2026</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- QR Modal -->
+    <div id="qr-modal" class="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md transition-all duration-300 animate-fade-in hidden" onclick="closeQrModal()">
+        <div class="relative p-6 rounded-3xl max-w-sm w-full shadow-2xl transform transition-all scale-100 bg-white dark:bg-gray-900 dark:border dark:border-gray-700" onclick="event.stopPropagation()">
+            <button onclick="closeQrModal()" class="absolute top-4 right-4 p-2 rounded-full transition-colors cursor-pointer bg-gray-100 text-black hover:bg-gray-200 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <div class="text-center mb-6 mt-2">
+                <h3 class="text-2xl font-bold flex items-center justify-center gap-2 text-gray-900 dark:text-white">
+                    <i data-lucide="qr-code" class="w-6 h-6 text-green-500"></i>
+                    Add Line Friend
+                </h3>
+                <p class="text-sm mt-1 text-gray-500 dark:text-gray-400">Scan to chat with me</p>
+            </div>
+            <div class="relative p-2 bg-white rounded-2xl overflow-hidden shadow-inner">
+                <img src="https://i.postimg.cc/NFypBdWn/Add-line.jpg" alt="Line QR Code Expanded" class="w-full h-auto rounded-xl">
+            </div>
+            <div class="mt-6 text-center">
+                <button onclick="closeQrModal()" class="px-6 py-2 rounded-full text-sm font-bold cursor-pointer bg-gray-100 text-gray-800 hover:bg-gray-200 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data
+        const skills = [
+            { name: "Java", category: "Language", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg" },
+            { name: "JavaScript", category: "Language", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" },
+            { name: "C++", category: "Language", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg" },
+            { name: "Flutter", category: "Framework", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flutter/flutter-original.svg" },
+            { name: "HTML5", category: "Frontend", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" },
+            { name: "CSS", category: "Frontend", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" },
+            { name: "Node.js", category: "Backend", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" },
+            { name: "MySQL", category: "Database", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" },
+            { name: "GitHub", category: "Version Control", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" },
+            { name: "XAMPP", category: "Tools", logo: "https://upload.wikimedia.org/wikipedia/commons/0/03/Xampp_logo.svg" },
+            { name: "FileZilla", category: "Tools", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/filezilla/filezilla-plain.svg" },
+            { name: "Office", category: "Software", logo: "https://i.postimg.cc/Vk4LP4mJ/Screenshot-2026-02-10-120041.png" },
+            { name: "Adobe", category: "Design", logo: "https://upload.wikimedia.org/wikipedia/commons/a/ac/Creative_Cloud.svg" }
+        ];
+
+        const softSkills = [
+            'Problem Solving', 'Teamwork', 'Adaptability', 'Interpersonal Skills', 
+            'Time Management', 'Creativity', 'Work Under Pressure', 'Willingness to Learn'
+        ];
+
+        const projects = [
+            {
+                title: "Mobile App OOP Project",
+                subtitle: "Movie & YouTube Streaming App",
+                description: "พัฒนาแอปพลิเคชัน Android สำหรับดูหนังและ YouTube โดยใช้ Flutter และ Java เชื่อมต่อกับ API ภายนอกเพื่อดึงข้อมูลหนัง โปรเจกต์นี้จัดทำขึ้นเพื่อส่งในรายวิชา OOP",
+                tags: ["Flutter", "Java", "API", "Android"],
+                icon: "smartphone",
+                image: "https://i.postimg.cc/jSdH8Txr/oop.png"
+            },
+            {
+                title: "IoT Smart Home System",
+                subtitle: "Home Automation",
+                description: "ระบบควบคุมอุปกรณ์ไฟฟ้าภายในบ้านผ่านแอปพลิเคชัน สามารถสั่งเปิด-ปิดไฟและเครื่องใช้ไฟฟ้าได้ พร้อมระบบเซ็นเซอร์ตรวจจับสถานะภายในบ้าน",
+                tags: ["IoT", "Sensors", "Network", "Hardware"],
+                icon: "cpu",
+                image: "https://i.postimg.cc/Y2L8BtB8/iot.png"
+            },
+            {
+                title: "Web & Data Project",
+                subtitle: "University Internal Website",
+                description: "เว็บไซต์สำหรับแนะนำและขายอะไหล่รถยนต์ดัดแปลง (Practical Modified Car Parts) ภายในมหาวิทยาลัย ใช้ FileZilla ในการจัดการฐานข้อมูล",
+                tags: ["Web Dev", "Database", "FileZilla", "E-Commerce"],
+                icon: "database",
+                image: "https://i.postimg.cc/rySyMSpy/web.png"
+            },
+            {
+                title: "Database Management System",
+                subtitle: "Relational Database Design",
+                description: "สร้างและออกแบบฐานข้อมูลเชื่อมโยง (Relational Database) เพื่อการใช้งานจริง ออกแบบโครงสร้างระบบให้เข้าใจง่ายและเป็นระเบียบ โดยใช้ MySQL และ XAMPP ในการจัดการ",
+                tags: ["MySQL", "XAMPP", "Database Design", "Backend"],
+                icon: "server",
+                image: "https://i.postimg.cc/7Zy2qg0f/Data-base.png"
+            },
+            {
+                title: "UX/UI Mobile Project",
+                subtitle: "Application Design & Prototyping",
+                description: "สร้างหน้าจอของแอปพลิเคชั่นเพื่อให้ดูดีและใช้งานได้ง่ายขึ้นโดยจะสร้างขึ้นเพื่อให้เราได้ใช้จริง ออกแบบโดยใช้ Figma ในการออกแบบ",
+                tags: ["Figma", "UX/UI", "Mobile Design", "Prototyping"],
+                icon: "palette",
+                image: "https://i.postimg.cc/0NYg57wB/uxui.png",
+                link: "https://www.figma.com/proto/lVmZMnD9l6RGb3tJJBhiSy/mmadissan-panukorn?node-id=215-197&p=f&t=QTQFYD6BQr5uYALq-1&scaling=scale-down&content-scaling=fixed&page-id=215%3A196&starting-point-node-id=215%3A197"
+            },
+            {
+                title: "Graphic Designer",
+                subtitle: "Student Club Activity",
+                description: "รับผิดชอบงานกราฟิกดีไซน์สำหรับการประกวดดาว-เดือน (Beauty Pageant) ของคณะวิทยาศาสตร์และเทคโนโลยี ออกแบบสื่อประชาสัมพันธ์ที่สำคัญของงาน",
+                tags: ["Graphic Design", "Adobe", "Creativity", "Teamwork"],
+                icon: "layout",
+                image: "https://i.postimg.cc/fRy1d60g/Poster-Bangsun-016.jpg"
+            }
+        ];
+
+        // Render Functions
+        function renderSkills() {
+            const container = document.getElementById('skills-grid');
+            container.innerHTML = skills.map(skill => `
+                <div class="relative p-6 rounded-2xl flex flex-col items-center gap-4 transition-all duration-300 group hover:-translate-y-2 border backdrop-blur-md bg-white/60 border-gray-200 hover:border-black hover:shadow-xl dark:bg-gray-900/40 dark:border-gray-800 dark:hover:border-cyan-500/50 dark:hover:bg-gray-800/60 dark:hover:shadow-[0_0_20px_rgba(34,211,238,0.1)]">
+                    <div class="w-16 h-16 flex items-center justify-center p-3 rounded-2xl transition-all duration-300 bg-gray-50 group-hover:bg-white shadow-sm dark:bg-gray-800 dark:group-hover:bg-white">
+                        <img src="${skill.logo}" alt="${skill.name}" class="w-full h-full object-contain transition-all duration-300 transform group-hover:scale-110">
+                    </div>
+                    <div class="text-center z-10">
+                        <p class="font-bold group-hover:text-black transition-colors text-gray-800 dark:text-gray-200 dark:group-hover:text-cyan-300">${skill.name}</p>
+                        <p class="text-xs text-gray-500 mt-1">${skill.category}</p>
+                    </div>
+                </div>
+            `).join('');
+
+            // Render Soft Skills
+            const softContainer = document.querySelector('#skills .grid.grid-cols-1');
+            softContainer.innerHTML = softSkills.map(skill => `
+                <div class="p-6 rounded-2xl text-center shadow-lg transition-all duration-300 hover:scale-105 border bg-black text-white border-black hover:bg-gray-800 dark:bg-gray-900/60 dark:border-gray-700 dark:text-white dark:hover:border-cyan-500">
+                    <p class="font-bold text-lg tracking-wide">${skill}</p>
+                </div>
+            `).join('');
+        }
+
+        function renderProjects() {
+            const container = document.getElementById('projects-grid');
+            container.innerHTML = projects.map(project => `
+                <div class="relative overflow-hidden rounded-2xl transition-all duration-500 group hover:-translate-y-2 border backdrop-blur-md bg-white/60 border-gray-200 hover:shadow-2xl hover:border-gray-300 dark:bg-gray-900/40 dark:border-gray-700/50 dark:hover:shadow-[0_0_30px_rgba(0,255,255,0.15)] dark:hover:border-cyan-500/30">
+                    <div class="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
+                    
+                    <div class="relative h-48 overflow-hidden rounded-t-2xl">
+                        <img src="${project.image}" alt="${project.title}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t opacity-60 from-white via-white/40 dark:from-gray-900 dark:via-gray-900/40"></div>
+                    </div>
+
+                    <div class="p-6 relative z-10 flex flex-col h-[calc(100%-12rem)]">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="p-3 rounded-xl transition-all duration-300 bg-gray-100 text-black group-hover:bg-black group-hover:text-white dark:bg-gray-800/80 dark:text-cyan-400 dark:group-hover:bg-cyan-500 dark:group-hover:text-white dark:shadow-[0_0_15px_rgba(0,0,0,0.3)]">
+                                <i data-lucide="${project.icon}" class="w-7 h-7"></i>
+                            </div>
+                            ${project.link ? `
+                            <a href="${project.link}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-xs font-bold px-3 py-1.5 rounded-full transition-colors bg-blue-50 text-blue-600 hover:bg-blue-100 dark:bg-cyan-500/10 dark:text-cyan-400 dark:hover:bg-cyan-500/20">
+                                Try Prototype <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                            </a>
+                            ` : ''}
+                        </div>
+                        <h3 class="text-2xl font-bold mb-2 transition-colors text-gray-900 group-hover:text-black dark:text-white dark:group-hover:text-cyan-300">
+                            ${project.title}
+                        </h3>
+                        <p class="text-sm mb-4 font-medium text-gray-500 dark:text-gray-400">${project.subtitle}</p>
+                        <p class="mb-6 leading-relaxed line-clamp-3 text-gray-600 dark:text-gray-300">${project.description}</p>
+                        <div class="flex flex-wrap gap-2 mt-auto">
+                            ${project.tags.map(tag => `
+                                <span class="px-3 py-1 text-xs font-bold tracking-wide rounded-full border backdrop-blur-sm bg-gray-100/80 text-gray-700 border-gray-200 dark:bg-gray-800/50 dark:text-cyan-100 dark:border-gray-700 dark:group-hover:border-cyan-500/50">
+                                    ${tag}
+                                </span>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Logic Functions
+        function toggleTheme() {
+            const html = document.documentElement;
+            html.classList.toggle('dark');
+            const icon = document.getElementById('theme-icon');
+            if (html.classList.contains('dark')) {
+                icon.setAttribute('data-lucide', 'sun');
+            } else {
+                icon.setAttribute('data-lucide', 'moon');
+            }
+            lucide.createIcons();
+        }
+
+        function enterSite() {
+            const welcome = document.getElementById('welcome-screen');
+            const main = document.getElementById('main-content');
+            
+            welcome.style.opacity = '0';
+            welcome.style.pointerEvents = 'none';
+            setTimeout(() => {
+                welcome.style.display = 'none';
+                main.style.display = 'block';
+                // Trigger reflow
+                void main.offsetWidth;
+                main.style.opacity = '1';
+            }, 700);
+        }
+
+        function openQrModal() {
+            const modal = document.getElementById('qr-modal');
+            modal.classList.remove('hidden');
+        }
+
+        function closeQrModal() {
+            const modal = document.getElementById('qr-modal');
+            modal.classList.add('hidden');
+        }
+
+        // Particle System
+        function initParticles() {
+            const canvas = document.getElementById('particle-canvas');
+            const ctx = canvas.getContext('2d');
+            let animationFrameId;
+
+            const resizeCanvas = () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            };
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+
+            const particles = [];
+            const particleCount = window.innerWidth < 768 ? 40 : 80;
+            const connectionDistance = 150;
+
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.vx = (Math.random() - 0.5) * 0.5;
+                    this.vy = (Math.random() - 0.5) * 0.5;
+                    this.size = Math.random() * 2 + 1;
+                }
+                update() {
+                    this.x += this.vx;
+                    this.y += this.vy;
+                    if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                    if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+                }
+                draw() {
+                    const isDark = document.documentElement.classList.contains('dark');
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fillStyle = isDark ? 'rgba(100, 200, 255, 0.5)' : 'rgba(0, 0, 0, 0.2)';
+                    ctx.fill();
+                }
+            }
+
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+
+            const animate = () => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                const isDark = document.documentElement.classList.contains('dark');
+                
+                particles.forEach((particle, index) => {
+                    particle.update();
+                    particle.draw();
+
+                    for (let j = index + 1; j < particles.length; j++) {
+                        const dx = particle.x - particles[j].x;
+                        const dy = particle.y - particles[j].y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+
+                        if (distance < connectionDistance) {
+                            ctx.beginPath();
+                            ctx.strokeStyle = isDark
+                                ? `rgba(100, 200, 255, ${1 - distance / connectionDistance})` 
+                                : `rgba(0, 0, 0, ${0.1 - (distance / connectionDistance) * 0.1})`;
+                            ctx.lineWidth = 1;
+                            ctx.moveTo(particle.x, particle.y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.stroke();
+                        }
+                    }
+                });
+                animationFrameId = requestAnimationFrame(animate);
+            };
+            animate();
+        }
+
+        // Initialization
+        document.addEventListener('DOMContentLoaded', () => {
+            renderSkills();
+            renderProjects();
+            lucide.createIcons();
+            initParticles();
+
+            // Custom Cursor Logic
+            const cursor = document.getElementById('custom-cursor');
+            const cursorInner = document.getElementById('cursor-inner');
+            const cursorRing = document.getElementById('cursor-ring');
+            
+            document.addEventListener('mousemove', (e) => {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+                
+                const target = e.target;
+                const isClickable = target.tagName === 'BUTTON' || 
+                                    target.tagName === 'A' || 
+                                    target.closest('button') || 
+                                    target.closest('a') ||
+                                    target.classList.contains('cursor-pointer');
+                
+                if (isClickable) {
+                    cursorInner.classList.add('scale-150');
+                    cursorRing.classList.remove('scale-50', 'opacity-0');
+                    cursorRing.classList.add('scale-100', 'opacity-100');
+                } else {
+                    cursorInner.classList.remove('scale-150');
+                    cursorRing.classList.add('scale-50', 'opacity-0');
+                    cursorRing.classList.remove('scale-100', 'opacity-100');
+                }
+            });
+
+            // Scroll Reveal
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('opacity-100', 'translate-y-0');
+                        entry.target.classList.remove('opacity-0', 'translate-y-20');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.reveal-on-scroll').forEach((el) => {
+                el.classList.add('opacity-0', 'translate-y-20', 'transition-all', 'duration-1000', 'transform');
+                observer.observe(el);
+            });
+
+            // Parallax
+            window.addEventListener('scroll', () => {
+                const offset = window.scrollY;
+                document.getElementById('blob1').style.transform = `translateY(${offset * 0.2}px)`;
+                document.getElementById('blob2').style.transform = `translateY(${offset * -0.1}px)`;
+                document.getElementById('blob3').style.transform = `translateY(${offset * 0.1}px)`;
+            });
+        });
+    </script>
+</body>
+</html>
